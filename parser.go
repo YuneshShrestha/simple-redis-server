@@ -111,6 +111,8 @@ func ParseCommand(command string, args []string) string {
 		return PerformPong(args)
 	case "SET":
 		return PerformSet(args)
+	case "GET":
+		return PerformGet(args)
 	default:
 		return errorMsg("Unknown command")
 	}
