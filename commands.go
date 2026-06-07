@@ -93,7 +93,6 @@ func PerformGet(args []string) string {
 	// Lock because many clients may be trying to access the same item
 	item.Mutex.Lock()
 	defer item.Mutex.Unlock()
-	
 
 	now := time.Now()
 	if item.Expiry.Before(now) {
@@ -101,4 +100,23 @@ func PerformGet(args []string) string {
 	}
 
 	return stringMsg(item.Value)
+}
+
+func PerformDel(args []string) string {
+	if len(args) == 0 {
+		return errorMsg("no value provided to 'DEL'")
+	}
+
+	item := store[args[0]]
+
+	if item == nil {
+		return nilBulkStringMsg()
+	}
+
+	// Lock because many clients may be trying to access the same item
+	item.Mutex.Lock()
+	defer item.Mutex.Unlock()
+
+	delete(store, args[0])
+	return stringMsg("OK")
 }
